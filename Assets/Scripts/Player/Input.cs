@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -66,9 +67,9 @@ public class Input : MonoBehaviour
 
     void Attack()
     {
-        if (attackInput.action.ReadValue<float>() != 0)
+        Animator handAnimator = hand.GetComponent<Animator>();
+        if (attackInput.action.WasPressedThisFrame())
         {
-            Animator handAnimator = hand.GetComponent<Animator>();
             handAnimator.SetTrigger("Attack");
         }
     }
