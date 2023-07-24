@@ -380,7 +380,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!136 &694222994
@@ -469,7 +469,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 1167226907}
   - {fileID: 244592425}
   - {fileID: 1983058570}
   - {fileID: 548924480}
@@ -489,13 +488,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 1167226905}
+  model: {fileID: 0}
   hand: {fileID: 1983058569}
+  cameraSensitivity: 0.4
+  camSmooth: 5
+  boomLength: 20
   gravityCoef: 3
-  jumpSpeed: 800
+  jumpForce: 800
   speed: 20
   movementInput: {fileID: -4691144993244056152, guid: dfb7f1d03196a5f4f965c1b4c6e890c5, type: 3}
-  jumpInput: {fileID: 0}
+  cameraInput: {fileID: -9051958938675691957, guid: dfb7f1d03196a5f4f965c1b4c6e890c5, type: 3}
   attackInput: {fileID: -5596950530566453858, guid: dfb7f1d03196a5f4f965c1b4c6e890c5, type: 3}
+  scrollInput: {fileID: 9037140761601674857, guid: dfb7f1d03196a5f4f965c1b4c6e890c5, type: 3}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -781,11 +785,11 @@ Transform:
   m_GameObject: {fileID: 1167226904}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.029066497, y: 1.3699999, z: -2.873}
+  m_LocalPosition: {x: -0.009000003, y: 8.67, z: -2.6090071}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 694222997}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1299655080 stripped
 Transform:
@@ -1195,5 +1199,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 705507995}
   - {fileID: 918770600}
+  - {fileID: 1167226907}
   - {fileID: 694222997}
   - {fileID: 1949738311}
