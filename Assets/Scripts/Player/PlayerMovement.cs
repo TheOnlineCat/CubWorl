@@ -57,6 +57,7 @@ public class PlayerMovement : MonoBehaviour
 
     void MovementControl()
     {
+        movement = new Vector3(movementInput.x, 0, movementInput.z);
         movement.Normalize();
         movement *= speed;
 

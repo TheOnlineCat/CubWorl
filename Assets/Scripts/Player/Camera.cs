@@ -37,22 +37,22 @@ public class PlayerCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        scrollInput = playerController.playerInput.scroll;
-        cameraInput = playerController.playerInput.cam;
+        //scrollInput = playerController.playerInput.scroll;
+        //cameraInput = playerController.playerInput.cam;
 
-        
+        Vector3 newPos = transform.position + cameraOffset;
+        transform.position = Vector3.Slerp(transform.position, newPos, camSmooth);
     }
 
     void LateUpdate()
     {
         CameraControl();
-        Vector3 newPos = transform.position + cameraOffset;
-        transform.position = Vector3.Slerp(transform.position, newPos, camSmooth);
+
     }
 
     void CameraControl()
     {
-        boomLength -= scrollInput / 120 * zoomSpeed;
+        boomLength -= playerController.playerInput.scroll / 120 * zoomSpeed;
         boomLength = Mathf.Clamp(boomLength, 5, 40);
 
 
@@ -73,7 +73,7 @@ public class PlayerCamera : MonoBehaviour
 
         //set camera distance
 
-        cameraOffset = Quaternion.AngleAxis(cameraInput.x * cameraSensitivity, Vector3.up) * cameraOffset;
-        cameraOffset = Quaternion.AngleAxis(-cameraInput.y * cameraSensitivity, Vector3.right) * cameraOffset;
+        cameraOffset = Quaternion.AngleAxis(playerController.playerInput.cam.x * cameraSensitivity, Vector3.up) * cameraOffset;
+        cameraOffset = Quaternion.AngleAxis(-playerController.playerInput.cam.y * cameraSensitivity, Vector3.right) * cameraOffset;
     }
 }
