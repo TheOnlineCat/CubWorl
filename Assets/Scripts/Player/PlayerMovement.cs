@@ -69,7 +69,6 @@ public class PlayerMovement : MonoBehaviour
             Vector3 movement = Quaternion.Euler(0f, angleDirection, 0f) * Vector3.forward;
             movement *= speed;
             movement *= Time.deltaTime;
-            print(movement);
             rb.MovePosition(rb.position + movement);
         }
     }
