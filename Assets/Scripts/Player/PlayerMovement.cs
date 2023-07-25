@@ -8,13 +8,14 @@ public class PlayerMovement : MonoBehaviour
 {
     public float jumpForce = 800.0f;
     public float speed = 20.0f;
+    public float turnSmoothTime = 0.1f;
 
     private Rigidbody rb;
     private Camera cam;
-    private Vector3 movementInput;
 
+    private Vector3 movementInput;
     private float distToGround;
-    private Vector3 movement;
+    private float curSmoothVelocity;
 
     [SerializeField]
     private PlayerController playerController;
@@ -38,16 +39,14 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        print(movementInput);
         movementInput = playerController.playerInput.movement;
     }
 
     private void FixedUpdate()
     {
-
-        print(movement);
-
+        JumpControl();
         MovementControl();
+        
     }
 
     Boolean IsGrounded()
@@ -57,24 +56,29 @@ public class PlayerMovement : MonoBehaviour
 
     void MovementControl()
     {
-        movement = new Vector3(movementInput.x, 0, movementInput.z);
-        movement.Normalize();
-        movement *= speed;
+        Vector3 direction = new Vector3(movementInput.x, 0, movementInput.z);
 
-        movement *= Time.deltaTime;
+        if (direction.magnitude != 0)
+        {
+            float angleDirection = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+            angleDirection += cam.transform.eulerAngles.y;
 
-        //movement = Quaternion.Euler(0, cam.transform.rotation.y, 0) * movement;
+            float angleSmooth = Mathf.SmoothDampAngle(transform.eulerAngles.y, angleDirection, ref curSmoothVelocity, turnSmoothTime);
+            transform.rotation = Quaternion.Euler(0f, angleSmooth, 0f);
 
+            Vector3 movement = Quaternion.Euler(0f, angleDirection, 0f) * Vector3.forward;
+            movement *= speed;
+            movement *= Time.deltaTime;
+            print(movement);
+            rb.MovePosition(rb.position + movement);
+        }
+    }
+
+    void JumpControl()
+    {
         if (IsGrounded())
         {
             rb.AddForce(new Vector3(0, movementInput.y * jumpForce, 0), ForceMode.Impulse);
         }
-
-/*        if (movementInput.magnitude != 0)
-        {
-            transform.Rotate(new Vector3(0, cam.transform.rotation.y, 0));
-        }*/
-
-        rb.MovePosition(rb.position + movement);
     }
 }

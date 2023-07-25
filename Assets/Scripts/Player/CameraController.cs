@@ -9,6 +9,7 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     internal GameObject target;
 
+    public float sensitivity = 3;
     public float boomLength = 10f;
 
     public float minLength = 20f;
@@ -21,7 +22,7 @@ public class CameraController : MonoBehaviour
     private float zoomSpeed = 2f;
     void Start()
     {
-        
+        cam.m_CommonLens = true;
     }
 
     private void Awake()
@@ -37,7 +38,9 @@ public class CameraController : MonoBehaviour
     {
         boomLength -= playerController.playerInput.scroll / 120 * zoomSpeed;
         boomLength = Mathf.Clamp(boomLength, minLength, maxLength);
-        cam.m_CommonLens = true;
         cam.m_Lens.FieldOfView = boomLength;
+
+        cam.m_XAxis.m_MaxSpeed = sensitivity * 100;
+        cam.m_YAxis.m_MaxSpeed = sensitivity;
     }
 }
