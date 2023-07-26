@@ -69,7 +69,16 @@ public class PlayerMovement : MonoBehaviour
             Vector3 movement = Quaternion.Euler(0f, angleDirection, 0f) * Vector3.forward;
             movement *= speed;
             movement *= Time.deltaTime;
-            rb.MovePosition(rb.position + movement);
+            /*if (!Physics.Raycast(rb.position, movement, movement.magnitude + 0.2f))
+            {
+                rb.MovePosition(rb.position + movement);
+            }*/
+            /*rb.AddForce(movement);
+            Vector3 newVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            newVel.Normalize();
+            Vector3.ClampMagnitude(newVel, speed);
+            rb.velocity = new Vector3(newVel.x, rb.velocity.y, newVel.z); */
+            MovePosition(rb.position + movement);
         }
     }
 
@@ -80,4 +89,23 @@ public class PlayerMovement : MonoBehaviour
             rb.AddForce(new Vector3(0, movementInput.y * jumpForce, 0), ForceMode.Impulse);
         }
     }
+
+    void MovePosition(Vector3 position)
+    {
+        Vector3 oldVel = rb.velocity;
+        //Get the position offset
+        Vector3 delta = position - rb.position;
+        //Get the speed required to reach it next frame
+        Vector3 vel = delta / Time.fixedDeltaTime;
+
+        //If you still want gravity, you can do this
+        vel.y = oldVel.y;
+
+        //If you want your rigidbody to not stop easily when hit
+        //This is however untested, and you should probably use a damper system instead, like using Smoothdamp but only keeping the velocity component
+        vel.x = Mathf.Abs(oldVel.x) > Mathf.Abs(vel.x) ? oldVel.x : vel.x;
+        vel.z = Mathf.Abs(oldVel.z) > Mathf.Abs(vel.z) ? oldVel.z : vel.z;
+
+        rb.velocity = vel;
+}
 }

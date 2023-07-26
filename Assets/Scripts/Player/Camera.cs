@@ -11,6 +11,7 @@ public class PlayerCamera : MonoBehaviour
 
     private float scrollInput;
     private Vector2 cameraInput;
+
     private Vector3 cameraOffset;
 
     [SerializeField]
@@ -19,7 +20,6 @@ public class PlayerCamera : MonoBehaviour
     private float zoomSpeed = 2f;
 
     private PlayerController playerController;
-
 
 
 
@@ -37,11 +37,11 @@ public class PlayerCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //scrollInput = playerController.playerInput.scroll;
-        //cameraInput = playerController.playerInput.cam;
+        scrollInput = playerController.playerInput.scroll;
+        cameraInput = playerController.playerInput.cam;
 
         Vector3 newPos = transform.position + cameraOffset;
-        transform.position = Vector3.Slerp(transform.position, newPos, camSmooth);
+        
     }
 
     void LateUpdate()
@@ -52,7 +52,26 @@ public class PlayerCamera : MonoBehaviour
 
     void CameraControl()
     {
-        boomLength -= playerController.playerInput.scroll / 120 * zoomSpeed;
+        boomLength -= scrollInput / 120 * zoomSpeed;
+        boomLength = Mathf.Clamp(boomLength, 5, 40);
+
+
+        
+
+        Vector3 vecFromTarget = transform.position - target.transform.position;
+        Vector3 newVec = Quaternion.AngleAxis(cameraInput.x * cameraSensitivity * Time.deltaTime, Vector3.up) * vecFromTarget;
+        newVec = Quaternion.AngleAxis(cameraInput.y * cameraSensitivity * Time.deltaTime, Vector3.right) * newVec;
+        newVec.Normalize();
+        newVec.y = Mathf.Clamp(newVec.y, 0, 80);
+
+        newVec *= boomLength;
+
+        
+        transform.LookAt(target.transform.position);
+        transform.position = Vector3.Slerp(transform.position, target.transform.position + newVec, camSmooth);
+
+
+        /*boomLength -= scrollInput / 120 * zoomSpeed;
         boomLength = Mathf.Clamp(boomLength, 5, 40);
 
 
@@ -73,7 +92,7 @@ public class PlayerCamera : MonoBehaviour
 
         //set camera distance
 
-        cameraOffset = Quaternion.AngleAxis(playerController.playerInput.cam.x * cameraSensitivity, Vector3.up) * cameraOffset;
-        cameraOffset = Quaternion.AngleAxis(-playerController.playerInput.cam.y * cameraSensitivity, Vector3.right) * cameraOffset;
+        cameraOffset = Quaternion.AngleAxis(cameraInput.x * cameraSensitivity, Vector3.up) * cameraOffset;
+        cameraOffset = Quaternion.AngleAxis(-cameraInput.y * cameraSensitivity, Vector3.right) * cameraOffset;*/
     }
 }
