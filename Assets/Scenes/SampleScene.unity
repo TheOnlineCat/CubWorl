@@ -661,6 +661,7 @@ GameObject:
   - component: {fileID: 694223002}
   - component: {fileID: 694223001}
   - component: {fileID: 694223003}
+  - component: {fileID: 694223004}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -772,10 +773,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 189376ce9bc10104cb6b5fc6e2139b0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movement: {x: 0, y: 0, z: 0}
-  cam: {x: 0, y: 0}
-  clicked: 0
-  scroll: 0
+  Movement: {x: 0, y: 0, z: 0}
+  Jump: 0
+  Cam: {x: 0, y: 0}
+  Clicked: 0
+  Scroll: 0
   movementInput: {fileID: -4691144993244056152, guid: dfb7f1d03196a5f4f965c1b4c6e890c5, type: 3}
   cameraInput: {fileID: -9051958938675691957, guid: dfb7f1d03196a5f4f965c1b4c6e890c5, type: 3}
   attackInput: {fileID: -5596950530566453858, guid: dfb7f1d03196a5f4f965c1b4c6e890c5, type: 3}
@@ -792,13 +794,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5a6628f3d26e7443bb35e5a781f4b38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  curState: 
   cam: {fileID: 1167226905}
   GravityCoef: 1.5
   TerminalVelocity: 2
   JumpForce: 0.6
-  Speed: 20
   TurnSmoothTime: 0.1
-  _verticalVelocity: 0
+  Speed: 20
+  RecoveryCoef: 0.5
+  RecoveryTime: 0.5
   playerInput: {fileID: 694223001}
 --- !u!143 &694223003
 CharacterController:
@@ -824,8 +828,29 @@ CharacterController:
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
+  m_MinMoveDistance: 0
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!95 &694223004
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 694222992}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 14b516c8fdc92234980f94f7c1078b11, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1919,7 +1944,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1426990145}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.6198173, y: 0.0000000033756604, z: -0.0000000026662035, w: 0.78474617}
+  m_LocalRotation: {x: 0.6198173, y: -0.00000000337566, z: 0.0000000026662035, w: 0.78474617}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1978,7 +2003,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30

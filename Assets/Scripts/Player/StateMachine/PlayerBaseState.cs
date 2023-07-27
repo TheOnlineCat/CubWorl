@@ -1,3 +1,5 @@
+using System.Collections;
+
 public abstract class PlayerBaseState
 {
     private bool _isRootState = false;
@@ -46,7 +48,7 @@ public abstract class PlayerBaseState
         FixedUpdateState();
         if (_currentSubState != null)
         {
-            _currentSubState.FixedUpdateState();
+            _currentSubState.FixedUpdateStates();
         }
     }
 
@@ -78,6 +80,19 @@ public abstract class PlayerBaseState
     protected void SetSubState(PlayerBaseState newSubState)
     {
         _currentSubState = newSubState;
-        newSubState.SetSuperState(this);  
+        newSubState.SetSuperState(this);
+        newSubState.EnterState();
+    }
+
+
+    protected IEnumerator StateCoroutine(IEnumerator enterCoroutine, IEnumerator exitCoroutine)
+    {
+        yield return Ctx.StartCoroutine(enterCoroutine);
+        enterCoroutine = null;
+        if (exitCoroutine != null)
+        {
+            Ctx.StartCoroutine(exitCoroutine);
+            exitCoroutine = null;
+        }
     }
 }

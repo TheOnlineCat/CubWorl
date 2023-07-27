@@ -21,14 +21,12 @@ public class PlayerGroundedState : PlayerBaseState
         }
         if(Ctx.IsJumping)
         {
-            Debug.Log("Jumping");
             SwitchState(Factory.Jump());
         }
     }
 
     public override void EnterState()
     {
-        Debug.Log("Grounded");
         Ctx.VerticalVelocity = 0;
     }
 

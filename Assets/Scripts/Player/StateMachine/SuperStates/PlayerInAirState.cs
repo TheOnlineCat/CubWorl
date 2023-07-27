@@ -19,6 +19,7 @@ public class PlayerInAirState : PlayerBaseState
         {
             SwitchState(Factory.Grounded());
         }
+        
     }
 
     public override void EnterState()
@@ -33,6 +34,10 @@ public class PlayerInAirState : PlayerBaseState
 
     public override void InitialiseSubState()
     {
+        if (Ctx.IsJumping)
+        {
+            SwitchState(Factory.Glide());
+        }
         if (Ctx.IsMoving)
         {
             SetSubState(Factory.Run());
@@ -45,7 +50,6 @@ public class PlayerInAirState : PlayerBaseState
 
     public override void UpdateState()
     {
-        CheckSwitchStates();
     }
 
     public override void FixedUpdateState()
@@ -54,6 +58,7 @@ public class PlayerInAirState : PlayerBaseState
             Ctx.VerticalVelocity -= Time.deltaTime * Ctx.GravityCoef;
         
         Ctx.Character.Move( new Vector3(0, Ctx.VerticalVelocity, 0) );
+        CheckSwitchStates();
     }
 
     Boolean IsGrounded()
