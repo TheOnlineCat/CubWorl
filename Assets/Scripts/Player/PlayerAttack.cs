@@ -25,10 +25,10 @@ public class PlayerAttack : MonoBehaviour
     void Attack()
     {
         Animator handAnimator = hand.GetComponent<Animator>();
-        if (playerController.playerInput.clicked)
+        if (playerController.playerInput.Clicked)
         {
             handAnimator.SetTrigger("Attack");
-            playerController.playerInput.clicked = false;
+            playerController.playerInput.Clicked = false;
         }
     }
 }

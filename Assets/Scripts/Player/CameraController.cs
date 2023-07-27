@@ -36,7 +36,7 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        boomLength -= playerController.playerInput.scroll / 120 * zoomSpeed;
+        boomLength -= playerController.playerInput.Scroll / 120 * zoomSpeed;
         boomLength = Mathf.Clamp(boomLength, minLength, maxLength);
         cam.m_Lens.FieldOfView = boomLength;
 

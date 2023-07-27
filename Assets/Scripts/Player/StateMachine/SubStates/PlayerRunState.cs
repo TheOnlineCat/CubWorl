@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class PlayerRunState : PlayerBaseState
 {
-    
-    
-
-    private Vector3 _movementInput;
+    private Vector2 _movementInput;
     private float _curSmoothVelocity;
 
     public PlayerRunState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory)
@@ -20,11 +17,15 @@ public class PlayerRunState : PlayerBaseState
         {
             SwitchState(Factory.Idle());
         }
+        if(Ctx.playerInput.Clicked)
+        {
+            SwitchState(Factory.Attack());
+        }
     }
 
     public override void EnterState()
     {
-        Debug.Log("Moving");
+        Debug.Log("Running");
     }
 
     public override void ExitState()
@@ -39,23 +40,20 @@ public class PlayerRunState : PlayerBaseState
 
     public override void UpdateState()
     {
-        _movementInput = Ctx.playerInput.movement;
+        _movementInput = Ctx.playerInput.Movement;
         CheckSwitchStates();
     }
 
     public override void FixedUpdateState()
     {
-        //Debug.Log("Moving");
         MovementControl();
     }
 
     void MovementControl()
     {
-        Vector3 direction = new Vector3(_movementInput.x, 0, _movementInput.z);
-
-        if (direction.magnitude != 0)
+        if (_movementInput.magnitude != 0)
         {
-            float angleDirection = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+            float angleDirection = Mathf.Atan2(_movementInput.x, _movementInput.y) * Mathf.Rad2Deg;
             angleDirection += Ctx.cam.transform.eulerAngles.y;
 
             float angleSmooth = Mathf.SmoothDampAngle(Ctx.transform.eulerAngles.y, angleDirection, ref _curSmoothVelocity, Ctx.TurnSmoothTime);
@@ -65,13 +63,11 @@ public class PlayerRunState : PlayerBaseState
             movement *= Ctx.Speed;
             movement *= Time.deltaTime;
 
-            Ctx.Character.Move(movement);
+            Ctx.Character.Move(movement + (Vector3.down * Time.deltaTime));
             //MovePosition(Ctx.Rigidbody.position + movement);
-
-
         }
     }
-    void MovePosition(Vector3 position)
+    /*oid MovePosition(Vector3 position)
     {
         Vector3 oldVel = Ctx.Rigidbody.velocity;
         //Get the position offset
@@ -88,5 +84,5 @@ public class PlayerRunState : PlayerBaseState
         vel.z = Mathf.Abs(oldVel.z) > Mathf.Abs(vel.z) ? oldVel.z : vel.z;
 
         Ctx.Rigidbody.velocity = vel;
-    }
+    }*/
 }

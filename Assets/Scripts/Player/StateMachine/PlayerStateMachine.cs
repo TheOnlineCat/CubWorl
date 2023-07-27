@@ -5,6 +5,7 @@ using UnityEngine.TextCore.Text;
 
 public class PlayerStateMachine : MonoBehaviour
 {
+    public string curState;
     //Reference to Camera;
     public Camera cam;
 
@@ -12,11 +13,13 @@ public class PlayerStateMachine : MonoBehaviour
     public float GravityCoef = 2;
     public float TerminalVelocity = 2;
     public float JumpForce = 0.7f;
-    public float Speed = 20.0f;
     public float TurnSmoothTime = 0.1f;
+    public float Speed = 20.0f;
+    public float RecoveryCoef = 0.5f;
+    public float RecoveryTime = 0.5f;
 
     //StateMachine
-    private PlayerBaseState _currentState;
+    internal PlayerBaseState _currentState;
     private PlayerStateFactory _states;
 
     //Components
@@ -26,8 +29,8 @@ public class PlayerStateMachine : MonoBehaviour
     //StateMachine Variables
     private bool _isMoving;
     private bool _isJumping;
-    [SerializeField]
     private float _verticalVelocity;
+    private int _currentCombo;
 
     [SerializeField]
     internal PlayerInput playerInput;
@@ -35,6 +38,7 @@ public class PlayerStateMachine : MonoBehaviour
 
 
     #region Getter Setter
+
     public Rigidbody Rigidbody { get { return _rigidbody; } }
     public CharacterController Character { get { return _character; } }
 
@@ -42,8 +46,9 @@ public class PlayerStateMachine : MonoBehaviour
 
     public bool IsMoving { get { return _isMoving; } }
     public bool IsJumping { get { return _isJumping; } }
-
     public float VerticalVelocity { get { return _verticalVelocity; } set { _verticalVelocity = value; } }
+    public int CurrentCombo { get { return _currentCombo; } set { _currentCombo = value; } }
+
     #endregion
 
     private void Awake()
@@ -59,8 +64,6 @@ public class PlayerStateMachine : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-
-        //Physics.gravity *= GravityCoef;
     }
 
     // Update is called once per frame
@@ -68,7 +71,7 @@ public class PlayerStateMachine : MonoBehaviour
     {
         InputHandler();
         _currentState.UpdateStates();
-        //print(_currentState);
+        curState = _currentState.GetType().Name;
     }
 
     private void FixedUpdate()
@@ -78,7 +81,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     void InputHandler()
     {
-        _isMoving = (new Vector2(playerInput.movement.x, playerInput.movement.z)).magnitude > 0;
-        _isJumping = playerInput.movement.y > 0;
+        _isMoving = playerInput.Movement.magnitude > 0;
+        _isJumping = playerInput.Jump > 0;
     }
 }

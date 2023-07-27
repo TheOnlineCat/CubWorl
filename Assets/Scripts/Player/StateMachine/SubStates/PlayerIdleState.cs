@@ -13,6 +13,10 @@ public class PlayerIdleState : PlayerBaseState
         {
             SwitchState(Factory.Run());
         }
+        if (Ctx.playerInput.Clicked)
+        {
+            SwitchState(Factory.Attack());
+        }
     }
 
     public override void EnterState()

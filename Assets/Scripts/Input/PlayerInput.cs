@@ -6,10 +6,11 @@ using UnityEngine.InputSystem;
 
 public class PlayerInput : MonoBehaviour
 {
-    public Vector3 movement;
-    public Vector2 cam;
-    public bool clicked = false;
-    public float scroll;
+    public Vector3 Movement;
+    public float Jump;
+    public Vector2 Cam;
+    public bool Clicked = false;
+    public float Scroll;
 
     [SerializeField]
     private InputActionReference movementInput, cameraInput, attackInput, scrollInput;
@@ -23,9 +24,10 @@ public class PlayerInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        movement = movementInput.action.ReadValue<Vector3>();
-        cam = cameraInput.action.ReadValue<Vector2>();
-        scroll = scrollInput.action.ReadValue<float>();
-        if (!clicked) clicked = attackInput.action.WasPressedThisFrame();
+        Movement = new Vector2(movementInput.action.ReadValue<Vector3>().x, movementInput.action.ReadValue<Vector3>().z);
+        Jump = movementInput.action.ReadValue<Vector3>().y;
+        Cam = cameraInput.action.ReadValue<Vector2>();
+        Scroll = scrollInput.action.ReadValue<float>();
+        if (!Clicked) Clicked = attackInput.action.WasPressedThisFrame();
     }
 }

@@ -41,7 +41,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _movementInput = playerController.playerInput.movement;
+        _movementInput = playerController.playerInput.Movement;
     }
 
     private void FixedUpdate()

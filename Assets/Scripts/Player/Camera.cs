@@ -37,8 +37,8 @@ public class PlayerCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        scrollInput = playerController.playerInput.scroll;
-        cameraInput = playerController.playerInput.cam;
+        scrollInput = playerController.playerInput.Scroll;
+        cameraInput = playerController.playerInput.Cam;
 
         Vector3 newPos = transform.position + cameraOffset;
         
