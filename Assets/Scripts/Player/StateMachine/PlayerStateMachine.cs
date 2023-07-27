@@ -5,6 +5,7 @@ using UnityEngine.TextCore.Text;
 
 public class PlayerStateMachine : MonoBehaviour
 {
+    public float dump;
     public string curState;
     //Reference to Camera;
     public Camera cam;
@@ -30,7 +31,8 @@ public class PlayerStateMachine : MonoBehaviour
     private bool _isMoving;
     private bool _isJumping;
     private float _verticalVelocity;
-    private int _currentCombo;
+    [SerializeField]
+    internal int _currentCombo;
 
     [SerializeField]
     internal PlayerInput playerInput;

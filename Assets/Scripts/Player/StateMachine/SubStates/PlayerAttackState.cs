@@ -7,7 +7,9 @@ using UnityEngine.XR;
 
 public class PlayerAttackState : PlayerBaseState
 {
-    bool _refreshed = false;
+    private float oldSpeed;
+    private bool _refreshed = true;
+    private float _time;
     private float _curSmoothVelocity;
     public PlayerAttackState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory)
         : base(currentContext, playerStateFactory)
@@ -17,42 +19,34 @@ public class PlayerAttackState : PlayerBaseState
 
     public override void CheckSwitchStates()
     {
-        /*if (Ctx.IsMoving)
+        if (Ctx.IsMoving)
         {
             SwitchState(Factory.Run());
         }
         else
         {
             SwitchState(Factory.Idle());
-        }*/
+        }
     }
 
     public override void EnterState()
     {
-        Animator animator = Ctx.GetComponent<Animator>();
-        if (Ctx.playerInput.Clicked)
-        {
-            animator.SetTrigger("Attack");
-            Ctx.playerInput.Clicked = false;
-        }
-        Ctx.CurrentCombo += 1;
-        Ctx.StartCoroutine(AttackStreak());
-        Ctx.StartCoroutine(Recover());
+        oldSpeed = Ctx.Speed;
     }
 
     public override void ExitState()
     {
-        //Ctx.EnterCoroutine = Slow();
-        //Ctx.ExitCoroutine = Recover();
-        //Ctx.EnterCoroutine = AttackStreak();
-        
+        oldSpeed = Ctx.Speed;
+
     }
 
     public override void FixedUpdateState()
     {
-        float angleSmooth = Mathf.SmoothDampAngle(Ctx.transform.eulerAngles.y, Ctx.cam.transform.eulerAngles.y, ref _curSmoothVelocity, 0.025f);
-        Ctx.transform.rotation = Quaternion.Euler(0f, angleSmooth, 0f);
-        //Ctx.transform.rotation = Quaternion.Euler(0, Ctx.cam.transform.eulerAngles.y, 0);
+        if (!_refreshed)
+        {
+            float angleSmooth = Mathf.SmoothDampAngle(Ctx.transform.eulerAngles.y, Ctx.cam.transform.eulerAngles.y, ref _curSmoothVelocity, 0.025f);
+            Ctx.transform.rotation = Quaternion.Euler(0f, angleSmooth, 0f);
+        }
     }
 
     public override void InitialiseSubState()
@@ -69,19 +63,39 @@ public class PlayerAttackState : PlayerBaseState
 
     public override void UpdateState()
     {
-        CheckSwitchStates();
+        if (Ctx.playerInput.Clicked)
+        {
+            Attack();
+        }
+        _time -= Time.deltaTime;
+        if (_time <= 0)
+        {
+            Ctx.CurrentCombo = 0;
+            CheckSwitchStates();
+        }
     }
 
-    private IEnumerator AttackStreak()
+    private void Attack()
     {
-        yield return new WaitForSecondsRealtime(3);
+        Animator animator = Ctx.GetComponent<Animator>();
+        if (Ctx.playerInput.Clicked && _refreshed)
+        {
+            _time = 3;
+            Ctx.CurrentCombo += 1;
+            animator.SetTrigger("Attack");
+            Ctx.playerInput.Clicked = false;
+            Ctx.StartCoroutine(Recover());
+        }
+        else Ctx.playerInput.Clicked = false;
     }
 
     private IEnumerator Recover()
     {
-        Ctx.Speed *= Ctx.RecoveryCoef;
-        yield return new WaitForSecondsRealtime(Ctx.RecoveryTime);
-        Ctx.Speed *= 1 / Ctx.RecoveryCoef;
+        _refreshed = false;
+        Ctx.Speed = oldSpeed * Ctx.RecoveryCoef;
+        yield return new WaitForSeconds(Ctx.RecoveryTime);
+        _refreshed = true;
+        Ctx.Speed = oldSpeed;
     }
 
 }

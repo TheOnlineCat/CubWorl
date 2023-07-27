@@ -25,7 +25,6 @@ public class PlayerRunState : PlayerBaseState
 
     public override void EnterState()
     {
-        Debug.Log("Running");
     }
 
     public override void ExitState()
