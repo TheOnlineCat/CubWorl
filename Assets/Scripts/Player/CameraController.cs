@@ -16,7 +16,7 @@ public class CameraController : MonoBehaviour
     public float maxLength = 70f;
 
     private CinemachineFreeLook cam;
-    private PlayerController playerController;
+    private PlayerStateMachine playerController;
 
     [SerializeField]
     private float zoomSpeed = 2f;
@@ -28,7 +28,7 @@ public class CameraController : MonoBehaviour
     private void Awake()
     {
         cam = GetComponent<CinemachineFreeLook>();
-        playerController = target.GetComponent<PlayerController>();
+        playerController = target.GetComponent<PlayerStateMachine>();
         
 
     }

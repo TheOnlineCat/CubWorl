@@ -11,11 +11,12 @@ public class PlayerMovement : MonoBehaviour
     public float turnSmoothTime = 0.1f;
 
     private Rigidbody rb;
+    private CharacterController character;
     private Camera cam;
 
-    private Vector3 movementInput;
-    private float distToGround;
-    private float curSmoothVelocity;
+    private Vector3 _movementInput;
+    private float _distToGround;
+    private float _curSmoothVelocity;
 
     [SerializeField]
     private PlayerController playerController;
@@ -25,9 +26,10 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        character = playerController.character;
         rb = playerController.rb;
         cam = playerController.cam;
-        distToGround = playerController.GetComponent<Collider>().bounds.extents.y;
+        _distToGround = playerController.GetComponent<Collider>().bounds.extents.y;
     }
 
     private void Awake()
@@ -39,7 +41,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        movementInput = playerController.playerInput.movement;
+        _movementInput = playerController.playerInput.movement;
     }
 
     private void FixedUpdate()
@@ -51,34 +53,29 @@ public class PlayerMovement : MonoBehaviour
 
     Boolean IsGrounded()
     {
-        return Physics.Raycast(transform.position, Vector3.down, distToGround + 0.1f);
+        return Physics.Raycast(transform.position, Vector3.down, _distToGround + 0.1f);
     }
 
     void MovementControl()
     {
-        Vector3 direction = new Vector3(movementInput.x, 0, movementInput.z);
+        Vector3 direction = new Vector3(_movementInput.x, 0, _movementInput.z);
 
         if (direction.magnitude != 0)
         {
             float angleDirection = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
             angleDirection += cam.transform.eulerAngles.y;
 
-            float angleSmooth = Mathf.SmoothDampAngle(transform.eulerAngles.y, angleDirection, ref curSmoothVelocity, turnSmoothTime);
+            float angleSmooth = Mathf.SmoothDampAngle(transform.eulerAngles.y, angleDirection, ref _curSmoothVelocity, turnSmoothTime);
             transform.rotation = Quaternion.Euler(0f, angleSmooth, 0f);
 
             Vector3 movement = Quaternion.Euler(0f, angleDirection, 0f) * Vector3.forward;
             movement *= speed;
             movement *= Time.deltaTime;
-            /*if (!Physics.Raycast(rb.position, movement, movement.magnitude + 0.2f))
-            {
-                rb.MovePosition(rb.position + movement);
-            }*/
-            /*rb.AddForce(movement);
-            Vector3 newVel = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-            newVel.Normalize();
-            Vector3.ClampMagnitude(newVel, speed);
-            rb.velocity = new Vector3(newVel.x, rb.velocity.y, newVel.z); */
+
+            //playerController.character.Move(movement);
             MovePosition(rb.position + movement);
+
+
         }
     }
 
@@ -86,7 +83,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (IsGrounded())
         {
-            rb.AddForce(new Vector3(0, movementInput.y * jumpForce, 0), ForceMode.Impulse);
+            rb.AddForce(new Vector3(0, _movementInput.y * jumpForce, 0), ForceMode.Impulse);
+            //playerController.character.Move(new Vector3(0, movementInput.y * jumpForce, 0));
         }
     }
 

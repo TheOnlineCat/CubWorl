@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     public Camera cam;
     public GameObject hand;
     public Rigidbody rb;
+    public CharacterController character;
 
     public float gravityCoef = 3f;
 
@@ -28,6 +29,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        character = GetComponent<CharacterController>();
         rb = GetComponent<Rigidbody>();
         Physics.gravity *= gravityCoef;
     }
