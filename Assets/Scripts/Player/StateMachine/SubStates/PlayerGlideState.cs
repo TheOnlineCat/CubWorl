@@ -44,21 +44,21 @@ public class PlayerGlideState : PlayerBaseState
 
     public override void EnterState()
     {
-        _initVelocity = Ctx.Character.velocity.magnitude + Ctx.VerticalVelocity;
+        //_initVelocity = (new Vector2(Ctx.Character.velocity.x, Ctx.Character.velocity.z).magnitude * 10) + Ctx.VerticalVelocity;
         _initVertical = Ctx.VerticalVelocity;
         Debug.Log(_initVelocity);
     }
 
     public override void ExitState()
     {
-
+        Ctx.transform.rotation = Quaternion.Euler(0f, Ctx.transform.rotation.y, 0f);
     }
 
     public override void FixedUpdateState()
     {
         Gravity();
         Glide();
-        _curLerp += Time.deltaTime;
+        _curLerp += Time.deltaTime * 0.5f;
     }
 
     public override void InitialiseSubState()
@@ -94,7 +94,7 @@ public class PlayerGlideState : PlayerBaseState
             
 
         Vector3 movement = Quaternion.Euler(0f, turnSmooth, 0f) * Vector3.forward;
-        float curSpeed = Mathf.Lerp(_initVelocity, Ctx.GlideSpeed, Mathf.Pow(_curLerp, 1.1f) );
+        float curSpeed = Mathf.Lerp(Ctx.InitialVelocity.magnitude, Ctx.GlideSpeed, Mathf.Pow(_curLerp, 3f) );
         movement *= curSpeed;
         movement *= Time.deltaTime;
 
@@ -103,7 +103,7 @@ public class PlayerGlideState : PlayerBaseState
     }
     private void Gravity()
     {
-        Ctx.VerticalVelocity = Mathf.SmoothStep(_initVertical, -Ctx.GlideCoef, Mathf.Pow(_curLerp, 1.2f));
+        Ctx.VerticalVelocity = Mathf.SmoothStep(_initVertical, -Ctx.GlideCoef, Mathf.Pow(_curLerp, 2f));
 
         Ctx.Character.Move(new Vector3(0, Ctx.VerticalVelocity, 0));
     }

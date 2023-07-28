@@ -6,6 +6,7 @@ using UnityEngine.TextCore.Text;
 
 public class PlayerStateMachine : MonoBehaviour
 {
+    public Vector3 vel;
     public string dump;
     public string curState;
     //Reference to Camera;
@@ -45,7 +46,7 @@ public class PlayerStateMachine : MonoBehaviour
     private bool _isJumping;
     private float _verticalVelocity;
     private int _currentCombo;
-    private int _currentSpeed;
+    private Vector3 _initialVelocity;
 
     [SerializeField]
     internal PlayerInput playerInput;
@@ -63,6 +64,7 @@ public class PlayerStateMachine : MonoBehaviour
     public bool IsJumping { get { return _isJumping; } }
     public float VerticalVelocity { get { return _verticalVelocity; } set { _verticalVelocity = value; } }
     public int CurrentCombo { get { return _currentCombo; } set { _currentCombo = value; } }
+    public Vector3 InitialVelocity { get { return _initialVelocity; } set { _initialVelocity = value; } }
 
     #endregion
     public void Timer(Action callback, ref float time)
@@ -100,6 +102,7 @@ public class PlayerStateMachine : MonoBehaviour
     private void FixedUpdate()
     {
         _currentState.FixedUpdateStates();
+        vel = Character.velocity;
     }
 
     private void InputHandler()

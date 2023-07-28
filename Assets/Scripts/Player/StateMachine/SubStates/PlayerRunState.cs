@@ -39,6 +39,7 @@ public class PlayerRunState : PlayerBaseState
     public override void UpdateState()
     {
         CheckSwitchStates();
+        Ctx.InitialVelocity = Ctx.Character.velocity;
     }
 
     public override void FixedUpdateState()
@@ -61,7 +62,6 @@ public class PlayerRunState : PlayerBaseState
             movement *= Time.deltaTime;
 
             Ctx.Character.Move(movement + (Vector3.down * Time.deltaTime));
-            
         }
     }
 }
