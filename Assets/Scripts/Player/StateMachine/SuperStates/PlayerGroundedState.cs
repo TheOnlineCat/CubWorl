@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerGroundedState : PlayerBaseState
 {
-    //private float _distToGround;
+    private bool _isGrounded { get { return Ctx.Character.isGrounded; } }
     public PlayerGroundedState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory)
         : base(currentContext, playerStateFactory)
     {
@@ -15,7 +15,7 @@ public class PlayerGroundedState : PlayerBaseState
 
     public override void CheckSwitchStates()
     {
-        if (!IsGrounded())
+        if (!_isGrounded)
         {
             SwitchState(Factory.InAir());
         }
@@ -54,13 +54,5 @@ public class PlayerGroundedState : PlayerBaseState
 
     public override void FixedUpdateState()
     {
-    }
-
-    public
-
-    Boolean IsGrounded()
-    {
-        return Ctx.Character.isGrounded;
-        //return Physics.Raycast(Ctx.transform.position, Vector3.down, _distToGround + 0.1f);
     }
 }

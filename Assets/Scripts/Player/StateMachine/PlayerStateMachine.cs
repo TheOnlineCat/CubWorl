@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,19 +6,31 @@ using UnityEngine.TextCore.Text;
 
 public class PlayerStateMachine : MonoBehaviour
 {
-    public float dump;
+    public string dump;
     public string curState;
     //Reference to Camera;
     public Camera cam;
 
     //Player Attributes
+    [Header("Jump And Fall Behaviour")]
     public float GravityCoef = 2;
-    public float TerminalVelocity = 2;
     public float JumpForce = 0.7f;
-    public float TurnSmoothTime = 0.1f;
+    public float TerminalVelocity = 2;
+    
+    [Header("Move Behaviour")]
     public float Speed = 20.0f;
+    public float TurnSmoothTime = 0.1f;
+
+    [Header("Attack Behaviour")]
     public float RecoveryCoef = 0.5f;
     public float RecoveryTime = 0.5f;
+
+    [Header("Glide Behaviour")]
+    public float GlideSpeed = 50;
+    public float GlideDelay = 1;
+    public float GlideTurnSpeed = 90;
+    public float GlideCoef = 0.2f;
+    public float FowardBias = 0.3f;
 
     //StateMachine
     internal PlayerBaseState _currentState;
@@ -31,8 +44,8 @@ public class PlayerStateMachine : MonoBehaviour
     private bool _isMoving;
     private bool _isJumping;
     private float _verticalVelocity;
-    [SerializeField]
-    internal int _currentCombo;
+    private int _currentCombo;
+    private int _currentSpeed;
 
     [SerializeField]
     internal PlayerInput playerInput;
@@ -52,6 +65,12 @@ public class PlayerStateMachine : MonoBehaviour
     public int CurrentCombo { get { return _currentCombo; } set { _currentCombo = value; } }
 
     #endregion
+    public void Timer(Action callback, ref float time)
+    {
+        time -= Time.deltaTime;
+        if (time <= 0) callback?.Invoke();
+
+    }
 
     private void Awake()
     {
@@ -63,17 +82,19 @@ public class PlayerStateMachine : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         InputHandler();
         _currentState.UpdateStates();
         curState = _currentState.GetType().Name;
+        dump = Character.velocity.y.ToString();
+        
     }
 
     private void FixedUpdate()
@@ -81,9 +102,11 @@ public class PlayerStateMachine : MonoBehaviour
         _currentState.FixedUpdateStates();
     }
 
-    void InputHandler()
+    private void InputHandler()
     {
         _isMoving = playerInput.Movement.magnitude > 0;
         _isJumping = playerInput.Jump > 0;
     }
+
+    
 }

@@ -7,8 +7,8 @@ using UnityEngine.XR;
 
 public class PlayerAttackState : PlayerBaseState
 {
-    private float oldSpeed;
     private bool _refreshed = true;
+    private float _oldSpeed;
     private float _time;
     private float _curSmoothVelocity;
     public PlayerAttackState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory)
@@ -31,12 +31,12 @@ public class PlayerAttackState : PlayerBaseState
 
     public override void EnterState()
     {
-        oldSpeed = Ctx.Speed;
+        _oldSpeed = Ctx.Speed;
     }
 
     public override void ExitState()
     {
-        oldSpeed = Ctx.Speed;
+        _oldSpeed = Ctx.Speed;
 
     }
 
@@ -67,14 +67,14 @@ public class PlayerAttackState : PlayerBaseState
         {
             Attack();
         }
-        _time -= Time.deltaTime;
-        if (_time <= 0)
-        {
-            Ctx.CurrentCombo = 0;
-            CheckSwitchStates();
-        }
+        Ctx.Timer(OnTimeOut, ref _time);
     }
 
+    private void OnTimeOut()
+    {
+        Ctx.CurrentCombo = 0;
+        CheckSwitchStates();
+    }
     private void Attack()
     {
         Animator animator = Ctx.GetComponent<Animator>();
@@ -92,10 +92,10 @@ public class PlayerAttackState : PlayerBaseState
     private IEnumerator Recover()
     {
         _refreshed = false;
-        Ctx.Speed = oldSpeed * Ctx.RecoveryCoef;
+        Ctx.Speed = _oldSpeed * Ctx.RecoveryCoef;
         yield return new WaitForSeconds(Ctx.RecoveryTime);
         _refreshed = true;
-        Ctx.Speed = oldSpeed;
+        Ctx.Speed = _oldSpeed;
     }
 
 }
