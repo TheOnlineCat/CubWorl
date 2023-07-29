@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,28 +7,44 @@ using UnityEngine.InputSystem;
 
 public class PlayerInput : MonoBehaviour
 {
-    public Vector3 Movement;
-    public bool Jump;
-    public Vector2 Cam;
-    public bool Clicked = false;
-    public float Scroll;
+    [NonSerialized] public Vector3 Movement;
+    [NonSerialized] public bool Jump;
+    [NonSerialized] public Vector2 Cam;
+    [NonSerialized] public bool Clicked = false;
+    [NonSerialized] public float Scroll;
 
+
+    [NonSerialized] public bool[] Ability;
+
+
+    [Header("Movement")]
     [SerializeField]
-    private InputActionReference movementInput, jumpInput, cameraInput, attackInput, scrollInput;
+    private InputActionReference movementInput;
+    [SerializeField]
+    private InputActionReference jumpInput, cameraInput, attackInput, scrollInput;
 
-    // Start is called before the first frame update
-    void Start()
+    [Header("Abilities")]
+    [SerializeField]
+    private InputActionReference ability1;
+    [SerializeField]
+    private InputActionReference ability2, ability3;
+
+    private void Start()
     {
-        
+        Ability = new bool[3];
     }
 
-    // Update is called once per frame
     void Update()
     {
         Movement = new Vector2(movementInput.action.ReadValue<Vector3>().x, movementInput.action.ReadValue<Vector3>().z);
-        if (!Jump) Jump = jumpInput.action.WasPressedThisFrame();
         Cam = cameraInput.action.ReadValue<Vector2>();
         Scroll = scrollInput.action.ReadValue<float>();
+
+        if (!Jump) Jump = jumpInput.action.WasPressedThisFrame();
         if (!Clicked) Clicked = attackInput.action.WasPressedThisFrame();
+
+        Ability[0] = ability1.action.IsPressed();
+        Ability[1] = ability2.action.IsPressed();
+        Ability[2] = ability3.action.IsPressed();
     }
 }
