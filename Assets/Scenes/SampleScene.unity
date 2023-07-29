@@ -870,6 +870,7 @@ GameObject:
   - component: {fileID: 694222994}
   - component: {fileID: 694223002}
   - component: {fileID: 694223001}
+  - component: {fileID: 694223006}
   - component: {fileID: 694223003}
   - component: {fileID: 694223004}
   - component: {fileID: 694223005}
@@ -1008,17 +1009,18 @@ MonoBehaviour:
   dump: 0
   curState: 
   cam: {fileID: 1167226905}
-  GravityCoef: 1.5
-  JumpForce: 0.6
-  TerminalVelocity: 2
+  GravityCoef: 9.8
+  JumpForce: 2400
+  TerminalVelocity: 54
   Speed: 20
   TurnSmoothTime: 0.1
   RecoveryCoef: 0.2
   RecoveryTime: 0.3
-  GlideSpeed: 35
   GlideDelay: 0.4
+  GlideSpeed: 35
   GlideTurnSpeed: 120
-  GlideCoef: 0.1
+  GlideTerminalCoef: 0.01
+  _verticalVelocity: 0
   playerInput: {fileID: 694223001}
 --- !u!143 &694223003
 CharacterController:
@@ -1037,7 +1039,7 @@ CharacterController:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Height: 2
   m_Radius: 0.5
@@ -1082,6 +1084,33 @@ MonoBehaviour:
   InputManager: {fileID: 694223001}
   Ability: {fileID: 11400000, guid: 97dbdd1b5e37dc24cb69c665bf6f6f14, type: 2}
   Slot: 0
+--- !u!54 &694223006
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 694222992}
+  serializedVersion: 4
+  m_Mass: 60
+  m_Drag: 8
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

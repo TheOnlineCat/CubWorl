@@ -15,7 +15,7 @@ public class PlayerGroundedState : PlayerBaseState
 
     public override void CheckSwitchStates()
     {
-        if (!_isGrounded)
+        if (!Ctx.IsGrounded())
         {
             SwitchState(Factory.InAir());
         }

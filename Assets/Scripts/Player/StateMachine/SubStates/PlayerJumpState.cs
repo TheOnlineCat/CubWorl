@@ -16,8 +16,8 @@ public class PlayerJumpState : PlayerBaseState
 
     public override void EnterState()
     {
-        //Ctx.Rigidbody.AddForce(new Vector3(0, Ctx.playerInput.movement.y * Ctx.JumpForce, 0), ForceMode.Impulse);
-        Ctx.VerticalVelocity = Ctx.JumpForce;
+        Ctx.Rigidbody.AddForce(new Vector3(0, Ctx.JumpForce, 0), ForceMode.Impulse);
+        //Ctx.VerticalVelocity = Ctx.JumpForce;
         Ctx.playerInput.Jump = false;
     }
 

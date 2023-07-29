@@ -27,10 +27,10 @@ public class PlayerStateMachine : MonoBehaviour
     public float RecoveryTime = 0.5f;
 
     [Header("Glide Behaviour")]
-    public float GlideSpeed = 50;
     public float GlideDelay = 1;
+    public float GlideSpeed = 50;
     public float GlideTurnSpeed = 90;
-    public float GlideCoef = 0.2f;
+    public float GlideTerminalCoef = 0.2f;
 
     //StateMachine
     internal PlayerBaseState _currentState;
@@ -39,13 +39,14 @@ public class PlayerStateMachine : MonoBehaviour
     //Components
     private Rigidbody _rigidbody;
     private CharacterController _character;
+    private Collider _collider;
 
     //StateMachine Variables
     private bool _isMoving;
     private bool _isJumping;
-    private float _verticalVelocity;
+    [SerializeField]
+    internal float _verticalVelocity;
     private int _currentCombo;
-    private Vector3 _initialVelocity;
 
     [Header("Dependencies")]
     [SerializeField]
@@ -64,9 +65,8 @@ public class PlayerStateMachine : MonoBehaviour
     public bool IsJumping { get { return _isJumping; } }
     public float VerticalVelocity { get { return _verticalVelocity; } set { _verticalVelocity = value; } }
     public int CurrentCombo { get { return _currentCombo; } set { _currentCombo = value; } }
-    public Vector3 InitialVelocity { get { return _initialVelocity; } set { _initialVelocity = value; } }
-
     #endregion
+
     public void Timer(Action callback, ref float time)
     {
         time -= Time.deltaTime;
@@ -78,6 +78,7 @@ public class PlayerStateMachine : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         _character = GetComponent<CharacterController>();
+        _collider = GetComponent<Collider>();
         _states = new PlayerStateFactory(this);
         _currentState = _states.Grounded();
         _currentState.EnterState();
@@ -93,6 +94,7 @@ public class PlayerStateMachine : MonoBehaviour
     private void Update()
     {
         InputHandler();
+        
         _currentState.UpdateStates();
         curState = _currentState.GetType().Name;
         dump = Character.velocity.y.ToString();
@@ -111,5 +113,8 @@ public class PlayerStateMachine : MonoBehaviour
         _isJumping = playerInput.Jump;
     }
 
-    
+    public Boolean IsGrounded()
+    {
+        return Physics.Raycast(transform.position, Vector3.down, _collider.bounds.extents.y + 0.1f);
+    }
 }

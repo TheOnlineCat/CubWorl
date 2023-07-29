@@ -8,7 +8,6 @@ public class PlayerInAirState : PlayerBaseState
 {
     private float _time;
     private bool _glideable = false;
-    private bool _isGrounded { get { return Ctx.Character.isGrounded; } }
     public PlayerInAirState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory)
         : base(currentContext, playerStateFactory)
     { 
@@ -17,7 +16,7 @@ public class PlayerInAirState : PlayerBaseState
     }
     public override void CheckSwitchStates()
     {
-        if (_isGrounded)
+        if (Ctx.IsGrounded())
         {
             SwitchState(Factory.Grounded());
         }
@@ -63,10 +62,11 @@ public class PlayerInAirState : PlayerBaseState
 
     private void Gravity()
     {
-        if (Mathf.Abs(Ctx.VerticalVelocity) < (Ctx.TerminalVelocity * Ctx.GravityCoef))
-            Ctx.VerticalVelocity -= Time.deltaTime * Ctx.GravityCoef;
+        Ctx.VerticalVelocity -= Time.deltaTime * Ctx.GravityCoef;
+        if (Mathf.Abs(Ctx.VerticalVelocity) > (Ctx.TerminalVelocity))
+            Ctx.VerticalVelocity = -Ctx.TerminalVelocity;
 
-        Ctx.Character.Move(new Vector3(0, Ctx.VerticalVelocity, 0));
+        Ctx.Rigidbody.AddForce(new Vector3(0, Ctx.VerticalVelocity, 0), ForceMode.VelocityChange);
     }
 
     private void SetGlideState()
