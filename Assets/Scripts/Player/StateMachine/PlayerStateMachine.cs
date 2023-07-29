@@ -31,7 +31,6 @@ public class PlayerStateMachine : MonoBehaviour
     public float GlideDelay = 1;
     public float GlideTurnSpeed = 90;
     public float GlideCoef = 0.2f;
-    public float FowardBias = 0.3f;
 
     //StateMachine
     internal PlayerBaseState _currentState;
@@ -48,6 +47,7 @@ public class PlayerStateMachine : MonoBehaviour
     private int _currentCombo;
     private Vector3 _initialVelocity;
 
+    [Header("Dependencies")]
     [SerializeField]
     internal PlayerInput playerInput;
 
@@ -108,7 +108,7 @@ public class PlayerStateMachine : MonoBehaviour
     private void InputHandler()
     {
         _isMoving = playerInput.Movement.magnitude > 0;
-        _isJumping = playerInput.Jump > 0;
+        _isJumping = playerInput.Jump;
     }
 
     

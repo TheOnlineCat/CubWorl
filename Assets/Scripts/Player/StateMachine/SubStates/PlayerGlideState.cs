@@ -38,20 +38,20 @@ public class PlayerGlideState : PlayerBaseState
         }
         if(Ctx.IsJumping)
         {
-            //SwitchState(Factory.InAir());
+            SwitchState(Factory.InAir());
         }
     }
 
     public override void EnterState()
     {
-        //_initVelocity = (new Vector2(Ctx.Character.velocity.x, Ctx.Character.velocity.z).magnitude * 10) + Ctx.VerticalVelocity;
         _initVertical = Ctx.VerticalVelocity;
-        Debug.Log(_initVelocity);
+        Ctx.playerInput.Jump = false;
     }
 
     public override void ExitState()
     {
         Ctx.transform.rotation = Quaternion.Euler(0f, Ctx.transform.rotation.y, 0f);
+        Ctx.playerInput.Jump = false;
     }
 
     public override void FixedUpdateState()
@@ -87,7 +87,8 @@ public class PlayerGlideState : PlayerBaseState
         }
         float turnSmooth = Mathf.SmoothDampAngle(_charRot.y, angleDirection, ref _curTurnVelocity, 0.3f, Ctx.GlideTurnSpeed);
 
-        float tiltDirection = _movementInput.magnitude * -Mathf.Sign(_curTurnVelocity) * _tilt;
+        float tiltDirection = _movementInput.magnitude * (-_curTurnVelocity/Ctx.GlideTurnSpeed) * _tilt;
+        Debug.Log(_curTurnVelocity);
         float tiltSmooth = Mathf.SmoothDampAngle(_charRot.z, tiltDirection, ref _curTiltVelocity, 0.3f, Ctx.GlideTurnSpeed);
 
         Ctx.transform.rotation = Quaternion.Euler(0f, turnSmooth, 0f) * Quaternion.Euler(0, 0, tiltSmooth);

@@ -64,4 +64,22 @@ public class PlayerRunState : PlayerBaseState
             Ctx.Character.Move(movement + (Vector3.down * Time.deltaTime));
         }
     }
+    void MovePosition(Vector3 position)
+    {
+        Vector3 oldVel = Ctx.Rigidbody.velocity;
+        //Get the position offset
+        Vector3 delta = position - Ctx.Rigidbody.position;
+        //Get the speed required to reach it next frame
+        Vector3 vel = delta / Time.fixedDeltaTime;
+
+        //If you still want gravity, you can do this
+        vel.y = oldVel.y;
+
+        //If you want your rigidbody to not stop easily when hit
+        //This is however untested, and you should probably use a damper system instead, like using Smoothdamp but only keeping the velocity component
+        vel.x = Mathf.Abs(oldVel.x) > Mathf.Abs(vel.x) ? oldVel.x : vel.x;
+        vel.z = Mathf.Abs(oldVel.z) > Mathf.Abs(vel.z) ? oldVel.z : vel.z;
+
+        Ctx.Rigidbody.velocity = vel;
+    }
 }

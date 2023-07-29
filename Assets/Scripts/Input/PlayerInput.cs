@@ -7,13 +7,13 @@ using UnityEngine.InputSystem;
 public class PlayerInput : MonoBehaviour
 {
     public Vector3 Movement;
-    public float Jump;
+    public bool Jump;
     public Vector2 Cam;
     public bool Clicked = false;
     public float Scroll;
 
     [SerializeField]
-    private InputActionReference movementInput, cameraInput, attackInput, scrollInput;
+    private InputActionReference movementInput, jumpInput, cameraInput, attackInput, scrollInput;
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +25,7 @@ public class PlayerInput : MonoBehaviour
     void Update()
     {
         Movement = new Vector2(movementInput.action.ReadValue<Vector3>().x, movementInput.action.ReadValue<Vector3>().z);
-        Jump = movementInput.action.ReadValue<Vector3>().y;
+        if (!Jump) Jump = jumpInput.action.WasPressedThisFrame();
         Cam = cameraInput.action.ReadValue<Vector2>();
         Scroll = scrollInput.action.ReadValue<float>();
         if (!Clicked) Clicked = attackInput.action.WasPressedThisFrame();
