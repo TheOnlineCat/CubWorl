@@ -1,4 +1,4 @@
-using System.Collections;
+/*using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -71,7 +71,7 @@ public class PlayerCamera : MonoBehaviour
         transform.position = Vector3.Slerp(transform.position, target.transform.position + newVec, camSmooth);
 
 
-        /*boomLength -= scrollInput / 120 * zoomSpeed;
+        *//*boomLength -= scrollInput / 120 * zoomSpeed;
         boomLength = Mathf.Clamp(boomLength, 5, 40);
 
 
@@ -93,6 +93,7 @@ public class PlayerCamera : MonoBehaviour
         //set camera distance
 
         cameraOffset = Quaternion.AngleAxis(cameraInput.x * cameraSensitivity, Vector3.up) * cameraOffset;
-        cameraOffset = Quaternion.AngleAxis(-cameraInput.y * cameraSensitivity, Vector3.right) * cameraOffset;*/
+        cameraOffset = Quaternion.AngleAxis(-cameraInput.y * cameraSensitivity, Vector3.right) * cameraOffset;*//*
     }
 }
+*/
